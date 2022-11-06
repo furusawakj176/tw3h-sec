@@ -1,28 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ERC4907.sol";
+interface ERC4907 {
+    function setUser(uint256 tokenId, address user, uint64 expires) external ;
+}
 
-contract NFTReturn is ERC4907 {
-    mapping(uint256 => string) public tokenURIs;
+contract NFTReturn {
 
-    constructor(string memory _name, string memory _symbol)
-        ERC4907(_name, _symbol)
-    {}
-
-    function tokenReturn(
-        uint256 _tokenId,
-        uint64 _expires
-    ) public onlyOwner(_tokenId) {
-        address user = 0x0000000000000000000000000000000000000000;
-        setUser(_tokenId, user, _expires);
-    }
-
-    modifier onlyOwner(uint256 _tokenId) {
-        require(
-            _isApprovedOrOwner(msg.sender, _tokenId),
-            "caller is not owner nor approved"
-        );
-        _;
+    function proxy(address dest, uint256 id) public returns (bool result) {
+        ERC4907 setContract = ERC4907(dest);
+        address user = msg.sender;
+        uint64 expire = 1667709136;
+ 
+        setContract.setUser(id, user, expire);
+        return result;
     }
 }
